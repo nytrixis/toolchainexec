@@ -67,6 +67,8 @@ contract: CONTRACT ID LBRACE contract_body RBRACE
             printf("#include \"ethereum_model.h\"\n");
             printf("class %s {\npublic:\n", $2);
             printf("// State variables\n");
+            /* contract_body will print statevars and functionlist */
+            printf("};\n");
         }
         ;
 
@@ -94,18 +96,18 @@ type: UINT   { $$ = "uint"; }
     ;
 
 functionlist: function functionlist
-            | function ;
+parameterlist: parameters
+    | /* empty */ { $$ = ""; }
+    ;
+functionlist: function
+            ;
 
 function: FUNCTION ID LPAREN parameterlist RPAREN visibility payable_opt returns_opt LBRACE stmtlist RBRACE
     {
-        printf("void %s(%s) {\n", $2, $4);  // Add parameter list
+        printf("    void %s(%s) {\n", $2, $4);  // Indent for class member
         // Print statements
-        printf("}\n");
+        printf("    }\n");
     }
-    ;
-
-parameterlist: parameters
-    | /* empty */ { $$ = ""; }
     ;
 
 parameters: parameter
@@ -137,41 +139,40 @@ stmtlist: stmt stmtlist
 stmt: REQUIRE LPAREN expr RPAREN SEMICOLON
     { printf("require(%s);\n", $3); }
     | ID ASSIGN expr SEMICOLON
-    { printf("%s = %s;\n", $1, $3); free((void*)$3); free((void*)$1); }
-    { printf("%s = %s;\n", $1, $3); free((void*)$3); free((void*)$1); }
+    { printf("%s = %s;\n", $1, $3); if ($3 != NULL && $3 != "true" && $3 != "false" && $3 != "msg_sender" && $3 != "msg_value" && $3 != "block_timestamp" && $3 != "block_number") free((void*)$3); }
     | ID LBRACKET expr RBRACKET ASSIGN expr SEMICOLON
-    { printf("%s[%s] = %s;\n", $1, $3, $6); free((void*)$3); free((void*)$6); free((void*)$1); }
+    { printf("%s[%s] = %s;\n", $1, $3, $6); if ($3 != NULL && $3 != "true" && $3 != "false" && $3 != "msg_sender" && $3 != "msg_value" && $3 != "block_timestamp" && $3 != "block_number") free((void*)$3); if ($6 != NULL && $6 != "true" && $6 != "false" && $6 != "msg_sender" && $6 != "msg_value" && $6 != "block_timestamp" && $6 != "block_number") free((void*)$6); }
     | ID PLUSEQ expr SEMICOLON
-    { printf("%s += %s;\n", $1, $3); free((void*)$3); free((void*)$1); }
+    { printf("%s += %s;\n", $1, $3); if ($3 != NULL && $3 != "true" && $3 != "false" && $3 != "msg_sender" && $3 != "msg_value" && $3 != "block_timestamp" && $3 != "block_number") free((void*)$3); }
     | ID LBRACKET expr RBRACKET PLUSEQ expr SEMICOLON
-    { printf("%s[%s] += %s;\n", $1, $3, $6); free((void*)$3); free((void*)$6); free((void*)$1); }
+    { printf("%s[%s] += %s;\n", $1, $3, $6); if ($3 != NULL && $3 != "true" && $3 != "false" && $3 != "msg_sender" && $3 != "msg_value" && $3 != "block_timestamp" && $3 != "block_number") free((void*)$3); if ($6 != NULL && $6 != "true" && $6 != "false" && $6 != "msg_sender" && $6 != "msg_value" && $6 != "block_timestamp" && $6 != "block_number") free((void*)$6); }
     | ID MINUSEQ expr SEMICOLON
-    { printf("%s -= %s;\n", $1, $3); free((void*)$3); free((void*)$1); }
+    { printf("%s -= %s;\n", $1, $3); if ($3 != NULL && $3 != "true" && $3 != "false" && $3 != "msg_sender" && $3 != "msg_value" && $3 != "block_timestamp" && $3 != "block_number") free((void*)$3); }
     | ID LBRACKET expr RBRACKET MINUSEQ expr SEMICOLON
-    { printf("%s[%s] -= %s;\n", $1, $3, $6); free((void*)$3); free((void*)$6); free((void*)$1); }
+    { printf("%s[%s] -= %s;\n", $1, $3, $6); if ($3 != NULL && $3 != "true" && $3 != "false" && $3 != "msg_sender" && $3 != "msg_value" && $3 != "block_timestamp" && $3 != "block_number") free((void*)$3); if ($6 != NULL && $6 != "true" && $6 != "false" && $6 != "msg_sender" && $6 != "msg_value" && $6 != "block_timestamp" && $6 != "block_number") free((void*)$6); }
     | ID LPAREN arglist RPAREN SEMICOLON
-    { printf("%s(%s);\n", $1, $3); free((void*)$3); free((void*)$1); }
+    { printf("%s(%s);\n", $1, $3); if ($3 != NULL && $3 != "true" && $3 != "false" && $3 != "msg_sender" && $3 != "msg_value" && $3 != "block_timestamp" && $3 != "block_number") free((void*)$3); }
     | PAYABLE LPAREN expr RPAREN DOT TRANSFER LPAREN expr RPAREN SEMICOLON
-    { printf("transfer(%s, %s);\n", $3, $8); free((void*)$3); free((void*)$8); }
+    { printf("transfer(%s, %s);\n", $3, $8); if ($3 != NULL && $3 != "true" && $3 != "false" && $3 != "msg_sender" && $3 != "msg_value" && $3 != "block_timestamp" && $3 != "block_number") free((void*)$3); if ($8 != NULL && $8 != "true" && $8 != "false" && $8 != "msg_sender" && $8 != "msg_value" && $8 != "block_timestamp" && $8 != "block_number") free((void*)$8); }
     | declaration SEMICOLON
     | ifstmt
     | whilestmt
     | forstmt
     | returnstmt SEMICOLON
-    { printf("return %s;\n", $1); free((void*)$1); }
+    { printf("return %s;\n", $1); if ($1 != NULL && $1 != "true" && $1 != "false" && $1 != "msg_sender" && $1 != "msg_value" && $1 != "block_timestamp" && $1 != "block_number") free((void*)$1); }
     | block
     | sendstmt SEMICOLON
     | callstmt SEMICOLON
     | transferstmt SEMICOLON
     | selfdestructstmt SEMICOLON
     | expr SEMICOLON
-    { printf("%s;\n", $1); free((void*)$1); }
+    { printf("%s;\n", $1); if ($1 != NULL && $1 != "true" && $1 != "false" && $1 != "msg_sender" && $1 != "msg_value" && $1 != "block_timestamp" && $1 != "block_number") free((void*)$1); }
     | /* empty */ ;
 
 declaration: type ID
-           {
-               printf("%s %s;\n", $1, $2);
-           }
+        {
+            printf("    %s %s;\n", $1, $2);
+        }
            ;
 
 expr: expr PLUS expr   { $$ = concatenate(3, $1, " + ", $3); }
