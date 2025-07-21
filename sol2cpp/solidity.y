@@ -1,5 +1,4 @@
 %{
-#define yylex yylex_debug
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -7,7 +6,7 @@
 #include <stdarg.h>
 
 void yyerror(const char *s);
-extern int yylex_debug(void);
+extern int yylex(void);
 
 char* concatenate(int count, ...) {
     va_list args;

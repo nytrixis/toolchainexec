@@ -69,7 +69,6 @@
 /* First part of user prologue.  */
 #line 1 "solidity.y"
 
-#define yylex yylex_debug
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -77,7 +76,7 @@
 #include <stdarg.h>
 
 void yyerror(const char *s);
-extern int yylex_debug(void);
+extern int yylex(void);
 
 char* concatenate(int count, ...) {
     va_list args;
@@ -108,7 +107,7 @@ char* create_number(int num) {
     return result;
 }
 
-#line 112 "solidity.tab.c"
+#line 111 "solidity.tab.c"
 
 # ifndef YY_CAST
 #  ifdef __cplusplus
@@ -630,17 +629,17 @@ static const yytype_int8 yytranslate[] =
 /* YYRLINE[YYN] -- Source line where rule number YYN was defined.  */
 static const yytype_uint8 yyrline[] =
 {
-       0,    60,    60,    62,    63,    65,    75,    76,    78,    79,
-      81,    85,    91,    92,    93,    94,    95,    98,    99,   100,
-     102,   105,   113,   115,   119,   121,   124,   125,   126,   127,
-     128,   130,   131,   133,   134,   136,   137,   139,   141,   143,
-     145,   147,   149,   151,   153,   155,   157,   158,   159,   160,
-     161,   163,   164,   165,   166,   167,   168,   170,   172,   178,
-     179,   180,   181,   182,   183,   184,   185,   186,   187,   188,
-     189,   190,   191,   192,   193,   194,   195,   196,   197,   198,
-     199,   200,   201,   202,   203,   209,   210,   211,   213,   214,
-     215,   216,   218,   219,   221,   223,   225,   228,   228,   230,
-     236,   242,   248
+       0,    59,    59,    61,    62,    64,    74,    75,    77,    78,
+      80,    84,    90,    91,    92,    93,    94,    97,    98,    99,
+     101,   104,   112,   114,   118,   120,   123,   124,   125,   126,
+     127,   129,   130,   132,   133,   135,   136,   138,   140,   142,
+     144,   146,   148,   150,   152,   154,   156,   157,   158,   159,
+     160,   162,   163,   164,   165,   166,   167,   169,   171,   177,
+     178,   179,   180,   181,   182,   183,   184,   185,   186,   187,
+     188,   189,   190,   191,   192,   193,   194,   195,   196,   197,
+     198,   199,   200,   201,   202,   208,   209,   210,   212,   213,
+     214,   215,   217,   218,   220,   222,   224,   227,   227,   229,
+     235,   241,   247
 };
 #endif
 
@@ -1412,7 +1411,7 @@ yyreduce:
   switch (yyn)
     {
   case 5: /* contract: CONTRACT ID LBRACE contract_body RBRACE  */
-#line 66 "solidity.y"
+#line 65 "solidity.y"
         {
             printf("#include \"ethereum_model.h\"\n");
             printf("class %s {\npublic:\n", (yyvsp[-3].id));
@@ -1420,397 +1419,397 @@ yyreduce:
             /* contract_body will print statevars and functionlist */
             printf("};\n");
         }
-#line 1424 "solidity.tab.c"
+#line 1423 "solidity.tab.c"
     break;
 
   case 10: /* statevar: MAPPING LPAREN ADDRESS ARROW UINT RPAREN ID SEMICOLON  */
-#line 82 "solidity.y"
+#line 81 "solidity.y"
         {
             printf("std::unordered_map<Address, uint> %s;\n", (yyvsp[-1].id));
         }
-#line 1432 "solidity.tab.c"
+#line 1431 "solidity.tab.c"
     break;
 
   case 11: /* statevar: type ID SEMICOLON  */
-#line 86 "solidity.y"
+#line 85 "solidity.y"
         {
             printf("%s %s;\n", (yyvsp[-2].id), (yyvsp[-1].id));
         }
-#line 1440 "solidity.tab.c"
+#line 1439 "solidity.tab.c"
     break;
 
   case 12: /* type: UINT  */
-#line 91 "solidity.y"
+#line 90 "solidity.y"
              { (yyval.id) = "uint"; }
-#line 1446 "solidity.tab.c"
+#line 1445 "solidity.tab.c"
     break;
 
   case 13: /* type: INT  */
-#line 92 "solidity.y"
+#line 91 "solidity.y"
              { (yyval.id) = "int"; }
-#line 1452 "solidity.tab.c"
+#line 1451 "solidity.tab.c"
     break;
 
   case 14: /* type: BOOL  */
-#line 93 "solidity.y"
+#line 92 "solidity.y"
              { (yyval.id) = "bool"; }
-#line 1458 "solidity.tab.c"
+#line 1457 "solidity.tab.c"
     break;
 
   case 15: /* type: ADDRESS  */
-#line 94 "solidity.y"
+#line 93 "solidity.y"
              { (yyval.id) = "Address"; }
-#line 1464 "solidity.tab.c"
+#line 1463 "solidity.tab.c"
     break;
 
   case 16: /* type: STRING  */
-#line 95 "solidity.y"
+#line 94 "solidity.y"
              { (yyval.id) = "std::string"; }
-#line 1470 "solidity.tab.c"
+#line 1469 "solidity.tab.c"
     break;
 
   case 19: /* parameterlist: %empty  */
-#line 100 "solidity.y"
+#line 99 "solidity.y"
                   { (yyval.id) = ""; }
-#line 1476 "solidity.tab.c"
+#line 1475 "solidity.tab.c"
     break;
 
   case 21: /* function: FUNCTION ID LPAREN parameterlist RPAREN visibility payable_opt returns_opt LBRACE stmtlist RBRACE  */
-#line 106 "solidity.y"
+#line 105 "solidity.y"
     {
         printf("    void %s(%s) {\n", (yyvsp[-9].id), (yyvsp[-7].id));  // Indent for class member
         // Print statements
         printf("    }\n");
     }
-#line 1486 "solidity.tab.c"
+#line 1485 "solidity.tab.c"
     break;
 
   case 22: /* parameters: parameter  */
-#line 114 "solidity.y"
+#line 113 "solidity.y"
     { (yyval.id) = (yyvsp[0].id); }
-#line 1492 "solidity.tab.c"
+#line 1491 "solidity.tab.c"
     break;
 
   case 23: /* parameters: parameter COMMA parameters  */
-#line 116 "solidity.y"
+#line 115 "solidity.y"
     { (yyval.id) = concatenate(3, (yyvsp[-2].id), ", ", (yyvsp[0].id)); }
-#line 1498 "solidity.tab.c"
+#line 1497 "solidity.tab.c"
     break;
 
   case 24: /* parameter: type ID  */
-#line 120 "solidity.y"
+#line 119 "solidity.y"
     { (yyval.id) = concatenate(3, (yyvsp[-1].id), " ", (yyvsp[0].id)); }
-#line 1504 "solidity.tab.c"
+#line 1503 "solidity.tab.c"
     break;
 
   case 25: /* parameter: %empty  */
-#line 121 "solidity.y"
+#line 120 "solidity.y"
                   { (yyval.id) = ""; }
-#line 1510 "solidity.tab.c"
+#line 1509 "solidity.tab.c"
     break;
 
   case 37: /* stmt: REQUIRE LPAREN expr RPAREN SEMICOLON  */
-#line 140 "solidity.y"
+#line 139 "solidity.y"
     { printf("require(%s);\n", (yyvsp[-2].id)); }
-#line 1516 "solidity.tab.c"
+#line 1515 "solidity.tab.c"
     break;
 
   case 38: /* stmt: ID ASSIGN expr SEMICOLON  */
-#line 142 "solidity.y"
+#line 141 "solidity.y"
     { printf("%s = %s;\n", (yyvsp[-3].id), (yyvsp[-1].id)); if ((yyvsp[-1].id) != NULL && (yyvsp[-1].id) != "true" && (yyvsp[-1].id) != "false" && (yyvsp[-1].id) != "msg_sender" && (yyvsp[-1].id) != "msg_value" && (yyvsp[-1].id) != "block_timestamp" && (yyvsp[-1].id) != "block_number") free((void*)(yyvsp[-1].id)); }
-#line 1522 "solidity.tab.c"
+#line 1521 "solidity.tab.c"
     break;
 
   case 39: /* stmt: ID LBRACKET expr RBRACKET ASSIGN expr SEMICOLON  */
-#line 144 "solidity.y"
+#line 143 "solidity.y"
     { printf("%s[%s] = %s;\n", (yyvsp[-6].id), (yyvsp[-4].id), (yyvsp[-1].id)); if ((yyvsp[-4].id) != NULL && (yyvsp[-4].id) != "true" && (yyvsp[-4].id) != "false" && (yyvsp[-4].id) != "msg_sender" && (yyvsp[-4].id) != "msg_value" && (yyvsp[-4].id) != "block_timestamp" && (yyvsp[-4].id) != "block_number") free((void*)(yyvsp[-4].id)); if ((yyvsp[-1].id) != NULL && (yyvsp[-1].id) != "true" && (yyvsp[-1].id) != "false" && (yyvsp[-1].id) != "msg_sender" && (yyvsp[-1].id) != "msg_value" && (yyvsp[-1].id) != "block_timestamp" && (yyvsp[-1].id) != "block_number") free((void*)(yyvsp[-1].id)); }
-#line 1528 "solidity.tab.c"
+#line 1527 "solidity.tab.c"
     break;
 
   case 40: /* stmt: ID PLUSEQ expr SEMICOLON  */
-#line 146 "solidity.y"
+#line 145 "solidity.y"
     { printf("%s += %s;\n", (yyvsp[-3].id), (yyvsp[-1].id)); if ((yyvsp[-1].id) != NULL && (yyvsp[-1].id) != "true" && (yyvsp[-1].id) != "false" && (yyvsp[-1].id) != "msg_sender" && (yyvsp[-1].id) != "msg_value" && (yyvsp[-1].id) != "block_timestamp" && (yyvsp[-1].id) != "block_number") free((void*)(yyvsp[-1].id)); }
-#line 1534 "solidity.tab.c"
+#line 1533 "solidity.tab.c"
     break;
 
   case 41: /* stmt: ID LBRACKET expr RBRACKET PLUSEQ expr SEMICOLON  */
-#line 148 "solidity.y"
+#line 147 "solidity.y"
     { printf("%s[%s] += %s;\n", (yyvsp[-6].id), (yyvsp[-4].id), (yyvsp[-1].id)); if ((yyvsp[-4].id) != NULL && (yyvsp[-4].id) != "true" && (yyvsp[-4].id) != "false" && (yyvsp[-4].id) != "msg_sender" && (yyvsp[-4].id) != "msg_value" && (yyvsp[-4].id) != "block_timestamp" && (yyvsp[-4].id) != "block_number") free((void*)(yyvsp[-4].id)); if ((yyvsp[-1].id) != NULL && (yyvsp[-1].id) != "true" && (yyvsp[-1].id) != "false" && (yyvsp[-1].id) != "msg_sender" && (yyvsp[-1].id) != "msg_value" && (yyvsp[-1].id) != "block_timestamp" && (yyvsp[-1].id) != "block_number") free((void*)(yyvsp[-1].id)); }
-#line 1540 "solidity.tab.c"
+#line 1539 "solidity.tab.c"
     break;
 
   case 42: /* stmt: ID MINUSEQ expr SEMICOLON  */
-#line 150 "solidity.y"
+#line 149 "solidity.y"
     { printf("%s -= %s;\n", (yyvsp[-3].id), (yyvsp[-1].id)); if ((yyvsp[-1].id) != NULL && (yyvsp[-1].id) != "true" && (yyvsp[-1].id) != "false" && (yyvsp[-1].id) != "msg_sender" && (yyvsp[-1].id) != "msg_value" && (yyvsp[-1].id) != "block_timestamp" && (yyvsp[-1].id) != "block_number") free((void*)(yyvsp[-1].id)); }
-#line 1546 "solidity.tab.c"
+#line 1545 "solidity.tab.c"
     break;
 
   case 43: /* stmt: ID LBRACKET expr RBRACKET MINUSEQ expr SEMICOLON  */
-#line 152 "solidity.y"
+#line 151 "solidity.y"
     { printf("%s[%s] -= %s;\n", (yyvsp[-6].id), (yyvsp[-4].id), (yyvsp[-1].id)); if ((yyvsp[-4].id) != NULL && (yyvsp[-4].id) != "true" && (yyvsp[-4].id) != "false" && (yyvsp[-4].id) != "msg_sender" && (yyvsp[-4].id) != "msg_value" && (yyvsp[-4].id) != "block_timestamp" && (yyvsp[-4].id) != "block_number") free((void*)(yyvsp[-4].id)); if ((yyvsp[-1].id) != NULL && (yyvsp[-1].id) != "true" && (yyvsp[-1].id) != "false" && (yyvsp[-1].id) != "msg_sender" && (yyvsp[-1].id) != "msg_value" && (yyvsp[-1].id) != "block_timestamp" && (yyvsp[-1].id) != "block_number") free((void*)(yyvsp[-1].id)); }
-#line 1552 "solidity.tab.c"
+#line 1551 "solidity.tab.c"
     break;
 
   case 44: /* stmt: ID LPAREN arglist RPAREN SEMICOLON  */
-#line 154 "solidity.y"
+#line 153 "solidity.y"
     { printf("%s(%s);\n", (yyvsp[-4].id), (yyvsp[-2].id)); if ((yyvsp[-2].id) != NULL && (yyvsp[-2].id) != "true" && (yyvsp[-2].id) != "false" && (yyvsp[-2].id) != "msg_sender" && (yyvsp[-2].id) != "msg_value" && (yyvsp[-2].id) != "block_timestamp" && (yyvsp[-2].id) != "block_number") free((void*)(yyvsp[-2].id)); }
-#line 1558 "solidity.tab.c"
+#line 1557 "solidity.tab.c"
     break;
 
   case 45: /* stmt: PAYABLE LPAREN expr RPAREN DOT TRANSFER LPAREN expr RPAREN SEMICOLON  */
-#line 156 "solidity.y"
+#line 155 "solidity.y"
     { printf("transfer(%s, %s);\n", (yyvsp[-7].id), (yyvsp[-2].id)); if ((yyvsp[-7].id) != NULL && (yyvsp[-7].id) != "true" && (yyvsp[-7].id) != "false" && (yyvsp[-7].id) != "msg_sender" && (yyvsp[-7].id) != "msg_value" && (yyvsp[-7].id) != "block_timestamp" && (yyvsp[-7].id) != "block_number") free((void*)(yyvsp[-7].id)); if ((yyvsp[-2].id) != NULL && (yyvsp[-2].id) != "true" && (yyvsp[-2].id) != "false" && (yyvsp[-2].id) != "msg_sender" && (yyvsp[-2].id) != "msg_value" && (yyvsp[-2].id) != "block_timestamp" && (yyvsp[-2].id) != "block_number") free((void*)(yyvsp[-2].id)); }
-#line 1564 "solidity.tab.c"
+#line 1563 "solidity.tab.c"
     break;
 
   case 50: /* stmt: returnstmt SEMICOLON  */
-#line 162 "solidity.y"
+#line 161 "solidity.y"
     { printf("return %s;\n", (yyvsp[-1].id)); if ((yyvsp[-1].id) != NULL && (yyvsp[-1].id) != "true" && (yyvsp[-1].id) != "false" && (yyvsp[-1].id) != "msg_sender" && (yyvsp[-1].id) != "msg_value" && (yyvsp[-1].id) != "block_timestamp" && (yyvsp[-1].id) != "block_number") free((void*)(yyvsp[-1].id)); }
-#line 1570 "solidity.tab.c"
+#line 1569 "solidity.tab.c"
     break;
 
   case 56: /* stmt: expr SEMICOLON  */
-#line 169 "solidity.y"
+#line 168 "solidity.y"
     { printf("%s;\n", (yyvsp[-1].id)); if ((yyvsp[-1].id) != NULL && (yyvsp[-1].id) != "true" && (yyvsp[-1].id) != "false" && (yyvsp[-1].id) != "msg_sender" && (yyvsp[-1].id) != "msg_value" && (yyvsp[-1].id) != "block_timestamp" && (yyvsp[-1].id) != "block_number") free((void*)(yyvsp[-1].id)); }
-#line 1576 "solidity.tab.c"
+#line 1575 "solidity.tab.c"
     break;
 
   case 58: /* declaration: type ID  */
-#line 173 "solidity.y"
+#line 172 "solidity.y"
         {
             printf("    %s %s;\n", (yyvsp[-1].id), (yyvsp[0].id));
         }
-#line 1584 "solidity.tab.c"
+#line 1583 "solidity.tab.c"
     break;
 
   case 59: /* expr: expr PLUS expr  */
-#line 178 "solidity.y"
+#line 177 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " + ", (yyvsp[0].id)); }
-#line 1590 "solidity.tab.c"
+#line 1589 "solidity.tab.c"
     break;
 
   case 60: /* expr: expr MINUS expr  */
-#line 179 "solidity.y"
+#line 178 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " - ", (yyvsp[0].id)); }
-#line 1596 "solidity.tab.c"
+#line 1595 "solidity.tab.c"
     break;
 
   case 61: /* expr: expr MUL expr  */
-#line 180 "solidity.y"
+#line 179 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " * ", (yyvsp[0].id)); }
-#line 1602 "solidity.tab.c"
+#line 1601 "solidity.tab.c"
     break;
 
   case 62: /* expr: expr DIV expr  */
-#line 181 "solidity.y"
+#line 180 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " / ", (yyvsp[0].id)); }
-#line 1608 "solidity.tab.c"
+#line 1607 "solidity.tab.c"
     break;
 
   case 63: /* expr: expr EQ expr  */
-#line 182 "solidity.y"
+#line 181 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " == ", (yyvsp[0].id)); }
-#line 1614 "solidity.tab.c"
+#line 1613 "solidity.tab.c"
     break;
 
   case 64: /* expr: expr NEQ expr  */
-#line 183 "solidity.y"
+#line 182 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " != ", (yyvsp[0].id)); }
-#line 1620 "solidity.tab.c"
+#line 1619 "solidity.tab.c"
     break;
 
   case 65: /* expr: expr LT expr  */
-#line 184 "solidity.y"
+#line 183 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " < ", (yyvsp[0].id)); }
-#line 1626 "solidity.tab.c"
+#line 1625 "solidity.tab.c"
     break;
 
   case 66: /* expr: expr GT expr  */
-#line 185 "solidity.y"
+#line 184 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " > ", (yyvsp[0].id)); }
-#line 1632 "solidity.tab.c"
+#line 1631 "solidity.tab.c"
     break;
 
   case 67: /* expr: expr LEQ expr  */
-#line 186 "solidity.y"
+#line 185 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " <= ", (yyvsp[0].id)); }
-#line 1638 "solidity.tab.c"
+#line 1637 "solidity.tab.c"
     break;
 
   case 68: /* expr: expr GEQ expr  */
-#line 187 "solidity.y"
+#line 186 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " >= ", (yyvsp[0].id)); }
-#line 1644 "solidity.tab.c"
+#line 1643 "solidity.tab.c"
     break;
 
   case 69: /* expr: expr AND expr  */
-#line 188 "solidity.y"
+#line 187 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " && ", (yyvsp[0].id)); }
-#line 1650 "solidity.tab.c"
+#line 1649 "solidity.tab.c"
     break;
 
   case 70: /* expr: expr OR expr  */
-#line 189 "solidity.y"
+#line 188 "solidity.y"
                        { (yyval.id) = concatenate(3, (yyvsp[-2].id), " || ", (yyvsp[0].id)); }
-#line 1656 "solidity.tab.c"
+#line 1655 "solidity.tab.c"
     break;
 
   case 71: /* expr: NOT expr  */
-#line 190 "solidity.y"
+#line 189 "solidity.y"
                        { (yyval.id) = concatenate(2, "!", (yyvsp[0].id)); }
-#line 1662 "solidity.tab.c"
+#line 1661 "solidity.tab.c"
     break;
 
   case 72: /* expr: LPAREN expr RPAREN  */
-#line 191 "solidity.y"
+#line 190 "solidity.y"
                          { (yyval.id) = concatenate(3, "(", (yyvsp[-1].id), ")"); }
-#line 1668 "solidity.tab.c"
+#line 1667 "solidity.tab.c"
     break;
 
   case 73: /* expr: ID  */
-#line 192 "solidity.y"
+#line 191 "solidity.y"
                        { (yyval.id) = (yyvsp[0].id); }
-#line 1674 "solidity.tab.c"
+#line 1673 "solidity.tab.c"
     break;
 
   case 74: /* expr: ID LBRACKET expr RBRACKET  */
-#line 193 "solidity.y"
+#line 192 "solidity.y"
                                 { (yyval.id) = concatenate(4, (yyvsp[-3].id), "[", (yyvsp[-1].id), "]"); }
-#line 1680 "solidity.tab.c"
+#line 1679 "solidity.tab.c"
     break;
 
   case 75: /* expr: PAYABLE LPAREN expr RPAREN  */
-#line 194 "solidity.y"
+#line 193 "solidity.y"
                                  { (yyval.id) = concatenate(3, "payable(", (yyvsp[-1].id), ")"); }
-#line 1686 "solidity.tab.c"
+#line 1685 "solidity.tab.c"
     break;
 
   case 76: /* expr: ID LPAREN arglist RPAREN  */
-#line 195 "solidity.y"
+#line 194 "solidity.y"
                                { (yyval.id) = concatenate(3, (yyvsp[-3].id), "(", (yyvsp[-1].id), ")"); }
-#line 1692 "solidity.tab.c"
+#line 1691 "solidity.tab.c"
     break;
 
   case 77: /* expr: NUM  */
-#line 196 "solidity.y"
+#line 195 "solidity.y"
                        { (yyval.id) = create_number((yyvsp[0].num)); }
-#line 1698 "solidity.tab.c"
+#line 1697 "solidity.tab.c"
     break;
 
   case 78: /* expr: TRUE  */
-#line 197 "solidity.y"
+#line 196 "solidity.y"
                        { (yyval.id) = "true"; }
-#line 1704 "solidity.tab.c"
+#line 1703 "solidity.tab.c"
     break;
 
   case 79: /* expr: FALSE  */
-#line 198 "solidity.y"
+#line 197 "solidity.y"
                        { (yyval.id) = "false"; }
-#line 1710 "solidity.tab.c"
+#line 1709 "solidity.tab.c"
     break;
 
   case 80: /* expr: MSGSENDER  */
-#line 199 "solidity.y"
+#line 198 "solidity.y"
                        { (yyval.id) = "msg_sender"; }
-#line 1716 "solidity.tab.c"
+#line 1715 "solidity.tab.c"
     break;
 
   case 81: /* expr: MSGVALUE  */
-#line 200 "solidity.y"
+#line 199 "solidity.y"
                        { (yyval.id) = "msg_value"; }
-#line 1722 "solidity.tab.c"
+#line 1721 "solidity.tab.c"
     break;
 
   case 82: /* expr: BLOCKTIMESTAMP  */
-#line 201 "solidity.y"
+#line 200 "solidity.y"
                        { (yyval.id) = "block_timestamp"; }
-#line 1728 "solidity.tab.c"
+#line 1727 "solidity.tab.c"
     break;
 
   case 83: /* expr: BLOCKNUMBER  */
-#line 202 "solidity.y"
+#line 201 "solidity.y"
                        { (yyval.id) = "block_number"; }
-#line 1734 "solidity.tab.c"
+#line 1733 "solidity.tab.c"
     break;
 
   case 84: /* expr: expr DOT ID LPAREN arglist RPAREN  */
-#line 204 "solidity.y"
+#line 203 "solidity.y"
     {
         (yyval.id) = concatenate(5, (yyvsp[-5].id), ".", (yyvsp[-3].id), "(", (yyvsp[-1].id), ")");
     }
-#line 1742 "solidity.tab.c"
+#line 1741 "solidity.tab.c"
     break;
 
   case 85: /* arglist: expr  */
-#line 209 "solidity.y"
+#line 208 "solidity.y"
               { (yyval.id) = (yyvsp[0].id); }
-#line 1748 "solidity.tab.c"
+#line 1747 "solidity.tab.c"
     break;
 
   case 86: /* arglist: expr COMMA arglist  */
-#line 210 "solidity.y"
+#line 209 "solidity.y"
                             { (yyval.id) = concatenate(3, (yyvsp[-2].id), ", ", (yyvsp[0].id)); }
-#line 1754 "solidity.tab.c"
+#line 1753 "solidity.tab.c"
     break;
 
   case 87: /* arglist: %empty  */
-#line 211 "solidity.y"
+#line 210 "solidity.y"
                      { (yyval.id) = ""; }
-#line 1760 "solidity.tab.c"
+#line 1759 "solidity.tab.c"
     break;
 
   case 96: /* returnstmt: RETURN expr  */
-#line 226 "solidity.y"
+#line 225 "solidity.y"
     { (yyval.id) = (yyvsp[0].id); }
-#line 1766 "solidity.tab.c"
+#line 1765 "solidity.tab.c"
     break;
 
   case 97: /* $@1: %empty  */
-#line 228 "solidity.y"
+#line 227 "solidity.y"
               { printf("        {\n"); }
-#line 1772 "solidity.tab.c"
+#line 1771 "solidity.tab.c"
     break;
 
   case 98: /* block: LBRACE $@1 stmtlist RBRACE  */
-#line 228 "solidity.y"
+#line 227 "solidity.y"
                                                          { printf("        }\n"); }
-#line 1778 "solidity.tab.c"
+#line 1777 "solidity.tab.c"
     break;
 
   case 99: /* sendstmt: ID DOT SEND LPAREN ID RPAREN  */
-#line 231 "solidity.y"
+#line 230 "solidity.y"
         {
             printf("send(%s, %s);\n", (yyvsp[-5].id), (yyvsp[-1].id));
         }
-#line 1786 "solidity.tab.c"
+#line 1785 "solidity.tab.c"
     break;
 
   case 100: /* callstmt: ID DOT CALL LPAREN ID RPAREN  */
-#line 237 "solidity.y"
+#line 236 "solidity.y"
         {
             printf("call(%s, %s);\n", (yyvsp[-5].id), (yyvsp[-1].id));
         }
-#line 1794 "solidity.tab.c"
+#line 1793 "solidity.tab.c"
     break;
 
   case 101: /* transferstmt: ID DOT TRANSFER LPAREN ID RPAREN  */
-#line 243 "solidity.y"
+#line 242 "solidity.y"
             {
                 printf("transfer(%s, %s);\n", (yyvsp[-5].id), (yyvsp[-1].id));
             }
-#line 1802 "solidity.tab.c"
+#line 1801 "solidity.tab.c"
     break;
 
   case 102: /* selfdestructstmt: SELFDESTRUCT LPAREN ID RPAREN  */
-#line 249 "solidity.y"
+#line 248 "solidity.y"
                 {
                     printf("selfdestruct(%s);\n", (yyvsp[-1].id));
                 }
-#line 1810 "solidity.tab.c"
+#line 1809 "solidity.tab.c"
     break;
 
 
-#line 1814 "solidity.tab.c"
+#line 1813 "solidity.tab.c"
 
       default: break;
     }
