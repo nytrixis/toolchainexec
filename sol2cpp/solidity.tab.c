@@ -1767,13 +1767,13 @@ yyreduce:
 
   case 97: /* $@1: %empty  */
 #line 228 "solidity.y"
-              { printf("{\n"); }
+              { printf("        {\n"); }
 #line 1772 "solidity.tab.c"
     break;
 
   case 98: /* block: LBRACE $@1 stmtlist RBRACE  */
 #line 228 "solidity.y"
-                                                 { printf("}\n"); }
+                                                         { printf("        }\n"); }
 #line 1778 "solidity.tab.c"
     break;
 

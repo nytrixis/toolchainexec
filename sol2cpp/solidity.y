@@ -225,7 +225,7 @@ forstmt: FOR LPAREN assignment SEMICOLON expr SEMICOLON assignment RPAREN stmt ;
 returnstmt: RETURN expr
     { $$ = $2; }
 
-block: LBRACE { printf("{\n"); } stmtlist RBRACE { printf("}\n"); }
+block: LBRACE { printf("        {\n"); } stmtlist RBRACE { printf("        }\n"); }
 
 sendstmt: ID DOT SEND LPAREN ID RPAREN
         {
