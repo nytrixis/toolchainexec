@@ -1,4 +1,5 @@
 %{
+#define yylex yylex_debug
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -6,7 +7,7 @@
 #include <stdarg.h>
 
 void yyerror(const char *s);
-extern int yylex();
+extern int yylex_debug(void);
 
 char* concatenate(int count, ...) {
     va_list args;
@@ -50,8 +51,9 @@ char* create_number(int num) {
 }
 
 %type <id> ID type expr
+%type <id> arglist
+%type <id> parameterlist parameters parameter returnstmt
 %type <num> NUM
-%type <id> expr
 
 %%
 
@@ -95,23 +97,27 @@ functionlist: function functionlist
             | function ;
 
 function: FUNCTION ID LPAREN parameterlist RPAREN visibility payable_opt returns_opt LBRACE stmtlist RBRACE
-        {
-            printf("void %s(", $2);
-            // Print parameters
-            printf(") {\n");
-            // Print statements
-            printf("}\n");
-        }
-        ;
+    {
+        printf("void %s(%s) {\n", $2, $4);  // Add parameter list
+        // Print statements
+        printf("}\n");
+    }
+    ;
 
 parameterlist: parameters
-             | /* empty */ ;
+    | /* empty */ { $$ = ""; }
+    ;
 
-parameters: parameter COMMA parameters
-          | parameter ;
+parameters: parameter
+    { $$ = $1; }
+    | parameter COMMA parameters
+    { $$ = concatenate(3, $1, ", ", $3); }
+    ;
 
 parameter: type ID
-         ;
+    { $$ = concatenate(3, $1, " ", $2); }
+    | /* empty */ { $$ = ""; }
+    ;
 
 visibility: PUBLIC
           | PRIVATE
@@ -128,18 +134,38 @@ returns_opt: RETURNS LPAREN type RPAREN
 stmtlist: stmt stmtlist
         | /* empty */ ;
 
-stmt: expr SEMICOLON
+stmt: REQUIRE LPAREN expr RPAREN SEMICOLON
+    { printf("require(%s);\n", $3); }
+    | ID ASSIGN expr SEMICOLON
+    { printf("%s = %s;\n", $1, $3); free((void*)$3); free((void*)$1); }
+    { printf("%s = %s;\n", $1, $3); free((void*)$3); free((void*)$1); }
+    | ID LBRACKET expr RBRACKET ASSIGN expr SEMICOLON
+    { printf("%s[%s] = %s;\n", $1, $3, $6); free((void*)$3); free((void*)$6); free((void*)$1); }
+    | ID PLUSEQ expr SEMICOLON
+    { printf("%s += %s;\n", $1, $3); free((void*)$3); free((void*)$1); }
+    | ID LBRACKET expr RBRACKET PLUSEQ expr SEMICOLON
+    { printf("%s[%s] += %s;\n", $1, $3, $6); free((void*)$3); free((void*)$6); free((void*)$1); }
+    | ID MINUSEQ expr SEMICOLON
+    { printf("%s -= %s;\n", $1, $3); free((void*)$3); free((void*)$1); }
+    | ID LBRACKET expr RBRACKET MINUSEQ expr SEMICOLON
+    { printf("%s[%s] -= %s;\n", $1, $3, $6); free((void*)$3); free((void*)$6); free((void*)$1); }
+    | ID LPAREN arglist RPAREN SEMICOLON
+    { printf("%s(%s);\n", $1, $3); free((void*)$3); free((void*)$1); }
+    | PAYABLE LPAREN expr RPAREN DOT TRANSFER LPAREN expr RPAREN SEMICOLON
+    { printf("transfer(%s, %s);\n", $3, $8); free((void*)$3); free((void*)$8); }
     | declaration SEMICOLON
-    | assignment SEMICOLON
     | ifstmt
     | whilestmt
     | forstmt
     | returnstmt SEMICOLON
+    { printf("return %s;\n", $1); free((void*)$1); }
     | block
     | sendstmt SEMICOLON
     | callstmt SEMICOLON
     | transferstmt SEMICOLON
     | selfdestructstmt SEMICOLON
+    | expr SEMICOLON
+    { printf("%s;\n", $1); free((void*)$1); }
     | /* empty */ ;
 
 declaration: type ID
@@ -147,14 +173,6 @@ declaration: type ID
                printf("%s %s;\n", $1, $2);
            }
            ;
-
-assignment: ID ASSIGN expr
-          {
-              printf("%s = ", $1);
-              // Print expr
-              printf(";\n");
-          }
-          ;
 
 expr: expr PLUS expr   { $$ = concatenate(3, $1, " + ", $3); }
     | expr MINUS expr  { $$ = concatenate(3, $1, " - ", $3); }
@@ -171,6 +189,9 @@ expr: expr PLUS expr   { $$ = concatenate(3, $1, " + ", $3); }
     | NOT expr         { $$ = concatenate(2, "!", $2); }
     | LPAREN expr RPAREN { $$ = concatenate(3, "(", $2, ")"); }
     | ID               { $$ = $1; }
+    | ID LBRACKET expr RBRACKET { $$ = concatenate(4, $1, "[", $3, "]"); }
+    | PAYABLE LPAREN expr RPAREN { $$ = concatenate(3, "payable(", $3, ")"); }
+    | ID LPAREN arglist RPAREN { $$ = concatenate(3, $1, "(", $3, ")"); }
     | NUM              { $$ = create_number($1); }
     | TRUE             { $$ = "true"; }
     | FALSE            { $$ = "false"; }
@@ -178,7 +199,20 @@ expr: expr PLUS expr   { $$ = concatenate(3, $1, " + ", $3); }
     | MSGVALUE         { $$ = "msg_value"; }
     | BLOCKTIMESTAMP   { $$ = "block_timestamp"; }
     | BLOCKNUMBER      { $$ = "block_number"; }
+    | expr DOT ID LPAREN arglist RPAREN
+    {
+        $$ = concatenate(5, $1, ".", $3, "(", $5, ")");
+    }
     ;
+
+arglist: expr { $$ = $1; }
+       | expr COMMA arglist { $$ = concatenate(3, $1, ", ", $3); }
+       | /* empty */ { $$ = ""; }
+
+assignment: ID ASSIGN expr
+          | ID LBRACKET expr RBRACKET ASSIGN expr
+          | ID PLUSEQ expr
+          | ID LBRACKET expr RBRACKET PLUSEQ expr
 
 ifstmt: IF LPAREN expr RPAREN stmt ELSE stmt
       | IF LPAREN expr RPAREN stmt ;
@@ -187,9 +221,10 @@ whilestmt: WHILE LPAREN expr RPAREN stmt ;
 
 forstmt: FOR LPAREN assignment SEMICOLON expr SEMICOLON assignment RPAREN stmt ;
 
-returnstmt: RETURN expr ;
+returnstmt: RETURN expr
+    { $$ = $2; }
 
-block: LBRACE stmtlist RBRACE ;
+block: LBRACE { printf("{\n"); } stmtlist RBRACE { printf("}\n"); }
 
 sendstmt: ID DOT SEND LPAREN ID RPAREN
         {
@@ -215,6 +250,3 @@ selfdestructstmt: SELFDESTRUCT LPAREN ID RPAREN
                 }
                 ;
 
-%%
-
-void yyerror(const char *s) { fprintf(stderr, "Error: %s\n", s); }

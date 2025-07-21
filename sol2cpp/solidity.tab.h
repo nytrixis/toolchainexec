@@ -129,10 +129,10 @@ extern int yydebug;
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
 union YYSTYPE
 {
-#line 46 "solidity.y"
+#line 47 "solidity.y"
 
     int num;
-    char* id;
+    const char* id;
     bool boolean;
 
 #line 139 "solidity.tab.h"

@@ -1,5 +1,3 @@
-// SPDX-License-Identifier: UNLICENSED
-pragma solidity ^0.8.0;
 contract SimpleBank {
     mapping(address => uint) balances;
     function deposit() public payable {
@@ -7,7 +5,7 @@ contract SimpleBank {
     }
     function withdraw(uint amount) public {
         require(balances[msg.sender] >= amount);
-        payable(msg.sender).transfer(amount); // Use transfer for safe Ether transfer
+        payable(msg.sender).transfer(amount); 
         balances[msg.sender] -= amount;
     }
 }

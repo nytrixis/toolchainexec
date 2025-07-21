@@ -1,4 +1,5 @@
 #pragma once
+#define payable(addr) (addr)
 #include <unordered_map>
 #include <string>
 #include <stdbool.h>

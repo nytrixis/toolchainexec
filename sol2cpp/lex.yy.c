@@ -2233,3 +2233,18 @@ void yyfree (void * ptr )
 
 
 int yywrap() { return 1; }
+
+// Debug: print each token as it is read
+int yylex_debug(void) {
+    int token = yylex();
+    switch(token) {
+        case NUM: printf("[LEX] NUM: %d\n", yylval.num); break;
+        case ID: printf("[LEX] ID: %s\n", yylval.id); break;
+        case TRUE: printf("[LEX] TRUE\n"); break;
+        case FALSE: printf("[LEX] FALSE\n"); break;
+        default:
+            if (token < 256) printf("[LEX] char: '%c'\n", token);
+            else printf("[LEX] token: %d\n", token);
+    }
+    return token;
+}
