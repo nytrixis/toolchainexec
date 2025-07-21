@@ -1,13 +1,19 @@
 #include "ethereum_model.h"
+#include <unordered_map>
+#include <string>
+using Address = std::string;
+
+extern std::unordered_map<Address, unsigned int> balances;
+extern Address msg_sender;
+extern unsigned int msg_value;
+
 class SimpleBank {
 public:
-    std::unordered_map<Address, uint> balances;
     void deposit() {
         balances[msg_sender] += msg_value;
     }
-    void withdraw(uint amount) {
+    void withdraw(unsigned int amount) {
         require(balances[msg_sender] >= amount);
-        transfer(msg_sender, amount);
         balances[msg_sender] -= amount;
     }
 };
